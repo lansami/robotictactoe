@@ -25,14 +25,16 @@ public class RoboTicTacToe extends AdvancedRobot
         
         setTurnGunRight(enemyDirection);
         setTurnRight(enemyDirection);
-        if (getTime() % 40 == 0) {
+        if (getTime() % 20 == 0) {
             moveDirection *= -1;
             setAhead(50 * moveDirection);
         }
-        setAhead((e.getDistance() - 50) * moveDirection * avoidWalls());
+        
         if (getGunHeat() == 0 && Math.abs(getGunTurnRemaining()) < 10) {
-            setFire(Math.min(600 / e.getDistance(), 3));
+            setFire(Math.min(1000 / e.getDistance(), 3));
         }
+		
+		setAhead(50 * moveDirection * avoidWalls());
 
 		double changeEnergy = enemyEnergy - e.getEnergy();
 		if (changeEnergy >= 0 && changeEnergy <= 3){
@@ -57,8 +59,7 @@ public class RoboTicTacToe extends AdvancedRobot
         double y = getY();
         if (x < wall_avoid_distance || x > fieldWidth - wall_avoid_distance) {
         	moveDirection *= -1;
-        }
-        if (y < wall_avoid_distance || y > fieldHeight - wall_avoid_distance) {
+        } else if (y < wall_avoid_distance || y > fieldHeight - wall_avoid_distance) {
         	moveDirection *= -1;
         }
         return moveDirection;
@@ -76,6 +77,6 @@ public class RoboTicTacToe extends AdvancedRobot
 	}	
 	
 	public void onBulletMissed(BulletMissedEvent e) {
-        setAhead(50 * moveDirection * avoidWalls());
+        //setAhead(50 * moveDirection * avoidWalls());
 	}	
 }
