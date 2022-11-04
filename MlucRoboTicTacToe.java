@@ -36,8 +36,9 @@ public class MlucRoboTicTacToe extends AdvancedRobot
 
 	public void onScannedRobot(ScannedRobotEvent e) {
 System.out.println("current heading: "+getHeading());
-        double enemyDirection = e.getBearing();
-		setTurnGunRight(getHeading() - getGunHeading() + enemyDirection);
+        //double enemyDirection = e.getBearing();
+		//setTurnGunRight(getHeading() - getGunHeading() + enemyDirection);
+		setGunHeading(e);
 		setHeading();
         setNextAhead(e);
 		
@@ -45,6 +46,18 @@ System.out.println("current heading: "+getHeading());
             setFire(Math.min(600 / e.getDistance(), 3));
         }
 	}
+	
+
+public void setGunHeading(ScannedRobotEvent e)
+{
+	double enemyAngle = e.getBearing();
+	if ( enemyAngle < 0 ) enemyAngle = 360 + enemyAngle;
+	double adjust = getHeading() + enemyAngle-getGunHeading();
+	if ( adjust < 180 )
+		setTurnGunRight(adjust);
+	else
+		setTurnGunLeft(360-adjust);
+}
 
 boolean headingNotSet = true;	
 public void setHeading()
