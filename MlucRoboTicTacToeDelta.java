@@ -1,4 +1,4 @@
-package RoboTicTacToe;
+package RoboTicTacToeOne;
 import robocode.*;
 import java.awt.Color;
 import static robocode.util.Utils.normalRelativeAngleDegrees;
@@ -6,7 +6,7 @@ import static robocode.util.Utils.normalRelativeAngleDegrees;
 /**
  * RoboTicTacToe - a robot by Mihai, Lucian, Mircea
  */
-public class MlucRoboTicTacToeDelta extends AdvancedRobot
+public class MlucRoboTicTacToeDeltaVOne extends AdvancedRobot
 {
 	double enemyEnergy = 100.00;
 	int moveDirection = 1;
@@ -18,18 +18,21 @@ public class MlucRoboTicTacToeDelta extends AdvancedRobot
 		setAdjustRadarForRobotTurn(true);
 		setAdjustGunForRobotTurn(true);
 		turnRadarRightRadians(Double.POSITIVE_INFINITY);
-		
-		setMaxVelocity(50);
 	}
 
-	public void onScannedRobot(ScannedRobotEvent e) {
-		setGunHeading(e);
-		setHeading();
-		setNextAhead(e);
-		
+	private void shootTheEnemy(ScannedRobotEvent e) 
+	{
 		if (getGunHeat() == 0 && Math.abs(getGunTurnRemaining()) < 10) {
-			setFire(Math.min(600 / e.getDistance(), 3));
-		}
+            setFire(Math.min(600 / e.getDistance(), 3));
+        }
+				
+		setGunHeading(e);
+	}
+	
+	public void onScannedRobot(ScannedRobotEvent e) {
+		setHeading();
+		shootTheEnemy(e);
+		setNextAhead(e);
 	}
 	
 
@@ -71,19 +74,23 @@ public class MlucRoboTicTacToeDelta extends AdvancedRobot
 		if (shouldHoldPosition()) {
 			// do something, I guess
 		} else {
-			double next = 100;
-        if ( getY()-18 < next )
-        	moveDirection = 1;	
-        else if ( getY()+next+18 > getBattleFieldHeight())
-        	moveDirection = -1;
-        double minDistance = 30;
+			double next = 200;
+
+        double minDistance = 50;
         double moveDistance = (Math.random() * (next - minDistance)) + minDistance;
+		if (getTime() % 5 == 0)
+		moveDirection = (Math.random() > 0.5) ? 1: -1;
+		
+		if ( getY()-18 < moveDistance )
+        	moveDirection = 1;	
+        else if ( getY()+moveDistance+18 > getBattleFieldHeight())
+        	moveDirection = -1;
         setAhead(moveDistance*moveDirection);
     }
 }
 
 private boolean shouldHoldPosition() {
-	if (getTime() % 3 == 0) {
+	if (getTime() % 5 == 0) {
 		return true;
 	}
 
