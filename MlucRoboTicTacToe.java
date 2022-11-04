@@ -73,7 +73,10 @@ if (headingNotSet ) {
 }
 	
 	public void setNextAhead(ScannedRobotEvent e) {
-        double next = 50;
+		if (shouldHoldPosition()) {
+			// do something, I guess
+		} else {
+		double next = 100;
 		/*if ( e.getDistance() < minFieldSize/6 )
             next = 10;
         else {
@@ -83,9 +86,21 @@ if (headingNotSet ) {
 		if ( getY()-18 < next )
 			moveDirection = 1;	
 		else if ( getY()+next+18 > getBattleFieldHeight())
-			moveDirection = -1;
+		moveDirection = -1;
+		double minDistance = 30;
+		double moveDistance = (Math.random() * (next - minDistance)) + minDistance;
+		setAhead(moveDistance*moveDirection);
+		}
+        
+	}
+
+	
+	private boolean shouldHoldPosition() {
+		if (getTime() % 3 == 0) {
+			return true;
+		}
 		
-		setAhead(next*moveDirection);
+		return false;
 	}
 
     private double avoidWalls() {
